@@ -28,6 +28,10 @@ var b = new Validator(myForm);
 a === b; // true
 ```
 
+Methods:
+- `validate` - validates the form
+- `update` - lets the validator know that fields wer added/removed
+
 Defining validators
 -------------------
 Validator is simply an object with `2` properties:
