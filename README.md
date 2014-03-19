@@ -20,6 +20,14 @@ The constructor:
 var myAwesomeValidator = new Validator(document.querySelector('form'));
 ```
 
+For each form only one validator is allowed:
+```js
+var a = new Validator(myForm);
+var b = new Validator(myForm);
+
+a === b; // true
+```
+
 Defining validators
 -------------------
 Validator is simply an object with `2` properties:
