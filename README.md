@@ -30,7 +30,7 @@ a === b; // true
 
 Methods:
 - `validate` - validates the form
-- `update` - lets the validator know that fields wer added/removed
+- `update` - lets the validator know that fields were added/removed
 
 Defining validators
 -------------------
