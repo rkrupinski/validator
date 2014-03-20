@@ -7,6 +7,7 @@
   "quotmark": true,
   "latedef": true,
   "laxcomma": true,
+  "maxlen": 80,
   "newcap": true,
   "noarg": true,
   "node": true,
