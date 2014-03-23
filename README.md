@@ -10,20 +10,20 @@ It feeds with `data-` attributes:
 - `data-v-[type]="[message]"`
 - `data-v-[type]-[param]="[value]"`
 
-Actual html:
+The actual html:
 ```html
 <input type="text" data-v-required="I demand value" data-v-length="Too short" data-v-length-min="3">
 ```
 
-The constructor:
+The factory:
 ```js
-var myAwesomeValidator = new Validator(document.querySelector('form'));
+var myAwesomeValidator = validator(document.querySelector('form'));
 ```
 
 For each form only one validator is allowed:
 ```js
-var a = new Validator(myForm);
-var b = new Validator(myForm);
+var a = validator(myForm);
+var b = validator(myForm);
 
 a === b; // true
 ```
