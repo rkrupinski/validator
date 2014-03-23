@@ -10,7 +10,9 @@ gulp.task('lint', function () {
 
 gulp.task('bundle', function () {
   gulp.src('./lib/index.js')
-    .pipe(browserify())
+    .pipe(browserify({
+      standalone: 'validator'
+    }))
     .pipe(gulp.dest('./build'));
 });
 
