@@ -17,7 +17,7 @@ The actual html:
 
 The factory:
 ```js
-var myAwesomeValidator = validator(document.querySelector('form'));
+validator(form, [options]);
 ```
 
 For each form only one validator is allowed:
@@ -31,6 +31,16 @@ a === b; // true
 Methods:
 - `validate` - validates the form
 - `update` - lets the validator know that fields were added/removed
+
+Options:
+- `submitHandler` - function to call when the form is submitted
+```js
+{
+  submitHandler: function (form) {
+    this.validate() && form.submit();
+  }
+}
+```
 
 Defining validators
 -------------------
