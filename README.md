@@ -42,6 +42,8 @@ Options:
 }
 ```
 
+View demo [here](http://rkrupinski.github.io/validator/demo/).
+
 Defining validators
 -------------------
 Validator is simply an object with `2` properties:
