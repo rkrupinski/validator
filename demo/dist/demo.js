@@ -207,11 +207,10 @@ function Validator(form, options) {
   form[key] = this;
 
   this._form = form;
+  this._form.noValidate = true;
   this._options = utils.extend({}, options || {});
-  this._fields = null;
 
   this.update();
-  this._form.setAttribute('novalidate', '');
 
   this._form.addEventListener('submit', function (e) {
     if (typeof this._options.submitHandler === 'function') {
