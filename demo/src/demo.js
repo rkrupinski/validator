@@ -1,3 +1,9 @@
 'use strict';
 
-require('../../lib/index.js')(document.querySelector('.js_form'));
+var validator = require('../../lib/index');
+
+validator(document.querySelector('.js_form'), {
+  submitHandler: function () {
+    this.validate() && alert('Yay!');
+  }
+});

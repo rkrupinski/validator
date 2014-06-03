@@ -1,20 +1,49 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-require('../../lib/index.js')(document.querySelector('.js_form'));
+var validator = require('../../lib/index');
 
-},{"../../lib/index.js":4}],2:[function(require,module,exports){
+validator(document.querySelector('.js_form'), {
+  submitHandler: function () {
+    this.validate() && alert('Yay!');
+  }
+});
+
+},{"../../lib/index":4}],2:[function(require,module,exports){
 'use strict';
 
 var config = {
+
+  // key used to store validator data
   key: '___v',
-  ignored: ['submit', 'button', 'reset', 'radio'],
-  events: { 'checkbox': 'change', '*': 'blur' },
+
+  // ignored input types
+  ignored: [
+    'submit',
+    'button',
+    'reset',
+    'radio',
+    'hidden'
+  ],
+
+  // field specific events
+  events: { 
+    'checkbox': 'change',
+    '*': 'blur'
+  },
+
+  // html element used for error messages
   errorElement: 'span',
+
+
+  // the className error messages get
   errorClassName: 'error',
+
+  // default method for inserting error messages
   appendMessage: function append(field, msg) {
     field.parentNode.appendChild(msg);
   }
+
 };
 
 module.exports = config;
@@ -195,36 +224,37 @@ var field = require('./field')
   , ignored = config.ignored
   , slice = [].slice;
 
-function nodeFilter(node) {
-  return ignored.indexOf(node.type) === -1;
+function elementFilter(element) {
+  return ignored.indexOf(element.type) === -1;
+}
+
+function submitHandler(e) {
+  /*jshint validthis:true*/
+  if (typeof this._options.submitHandler === 'function') {
+    e.preventDefault();
+    return this._options.submitHandler.call(this, this._form);
+  }
+
+  !this.validate() && e.preventDefault();
 }
 
 function Validator(form, options) {
   if (form[key]) {
     return form[key];
   }
-
   form[key] = this;
 
   this._form = form;
   this._form.noValidate = true;
+  this._form.addEventListener('submit', submitHandler.bind(this));
   this._options = utils.extend({}, options || {});
 
   this.update();
-
-  this._form.addEventListener('submit', function (e) {
-    if (typeof this._options.submitHandler === 'function') {
-      e.preventDefault();
-      return this._options.submitHandler.call(this, this._form);
-    }
-
-    !this.validate() && e.preventDefault();
-  }.bind(this));
 }
 
 Validator.prototype.update = function () {
-  this._fields = slice.call(this._form.querySelectorAll('input'))
-      .filter(nodeFilter)
+  this._fields = slice.call(this._form.elements)
+      .filter(elementFilter)
       .map(field);
 };
 
