@@ -48,7 +48,6 @@ var message = require('./message')
   , validators = require('./validators')
   , config = require('./config')
   , key = config.key
-  , events = config.events
   , re = /^data-v-([a-z]+)$/
   , slice = [].slice;
 
