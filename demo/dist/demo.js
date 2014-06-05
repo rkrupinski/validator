@@ -4,8 +4,9 @@
 var validator = require('../../lib/index');
 
 validator(document.querySelector('.js_form'), {
-  submitHandler: function () {
+  submitHandler: function (form) {
     this.validate() && alert('Yay!');
+    form.reset();
   }
 });
 
@@ -21,16 +22,8 @@ var config = {
   ignored: [
     'submit',
     'button',
-    'reset',
-    'radio',
-    'hidden'
+    'reset'
   ],
-
-  // field specific events
-  events: { 
-    'checkbox': 'change',
-    '*': 'blur'
-  },
 
   // html element used for error messages
   errorElement: 'span',
@@ -113,18 +106,15 @@ function Field(node) {
   node[key] = this;
 
   this._node = node;
+  this._node.addEventListener('change',
+      this.validate.bind(this));
   this._validators = getValidators(this._node);
   this._message = message(this._node);
-
-  this._node.addEventListener(events[this._node.type] ||
-      events['*'], this.validate.bind(this));
-
-  this._node.addEventListener('focus', function handleFocus() {
-    this._message.hide();
-  }.bind(this));
 }
 
 Field.prototype.validate = function () {
+  console.log('validate: ' + this._node.name);
+
   var validator
     , valid = true
     , i = -1
@@ -285,6 +275,10 @@ var validators = {
       switch (field.type) {
         case 'checkbox':
           ret = field.checked;
+          break;
+        case 'radio':
+          ret = !!field.form.querySelector('[name="' +
+              field.name + '"]:checked');
           break;
         default:
           ret = !!field.value.length;

@@ -54,7 +54,19 @@
       <input id="repeat_password" type="password" name="repeat_password" data-v-required="This field is required" data-v-equalto="Passwords don't match" data-v-equalto-other="password">
     </div>
     <div class="row">
-      <input type="submit">
+      <input type="radio" name="sex" id="female" value="1">
+      <label for="female">Female</label>
+      <input type="radio" name="sex" id="male" value="0" data-v-required="This field is required">
+      <label for="male">Male</label>
+      <abbr class="req" title="Required">*</abbr>
+    </div>
+    <div class="row">
+      <input id="terms" type="checkbox" name="terms" data-v-required="This field is required">
+      <label for="terms">I accept the terms</label>
+      <abbr class="req" title="Required">*</abbr>
+    </div>
+    <div class="row">
+      <input type="submit" value="Register">
     </div>
   </form>
   <script src="dist/demo.js"></script>
