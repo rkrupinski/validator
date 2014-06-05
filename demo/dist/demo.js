@@ -302,9 +302,9 @@ var validators = {
   equalto: {
     priority: 20,
     validate: function (field, params) {
-      var id = params.other;
+      var other = document.querySelector('#' + params.other);
 
-      return field.value === document.querySelector('#' + id).value;
+      return other.value ? field.value === other.value : true;
     }
   }
 
