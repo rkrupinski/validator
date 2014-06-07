@@ -15,7 +15,7 @@
     }
 
     .row {
-      margin-bottom: .5em;
+      margin-bottom: .75em;
     }
 
     .req,
@@ -59,6 +59,14 @@
       <input type="radio" name="sex" id="male" value="0" data-v-required="This field is required">
       <label for="male">Male</label>
       <abbr class="req" title="Required">*</abbr>
+    </div>
+    <div class="row">
+      <label for="bio">
+        Bio:
+        <abbr class="req" title="Required">*</abbr>
+      </label>
+      <br>
+      <textarea id="bio" name="bio" cols="20" rows="3" data-v-required="This field is required"></textarea>
     </div>
     <div class="row">
       <input id="terms" type="checkbox" name="terms" data-v-required="This field is required">

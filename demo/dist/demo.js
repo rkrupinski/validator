@@ -114,8 +114,6 @@ function Field(node) {
 }
 
 Field.prototype.validate = function () {
-  console.log('validate: ' + this._node.name);
-
   var validator
     , valid = true
     , i = -1
@@ -282,7 +280,7 @@ var validators = {
               field.name + '"]:checked');
           break;
         default:
-          ret = !!field.value.length;
+          ret = !!field.value;
           break;
       }
 
