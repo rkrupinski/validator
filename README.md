@@ -1,8 +1,6 @@
 validator
 =========
-
-Lightweight form validation.
-
+Lightweight (, basic) form validation.
 
 Usage
 -----
@@ -12,24 +10,27 @@ It feeds with `data-` attributes:
 
 The actual html:
 ```html
-<input type="text" data-v-required="I demand value" data-v-length="Too short" data-v-length-min="3">
+<input type="text" data-v-required="I demand value" data-v-regex="Caps only" data-v-regex-pattern="^[A-Z]+$">
 ```
 
 The factory:
 ```js
-validator(form, [options]);
+var validator = require('validator');
+
+validator(form /*, [options]*/);
 ```
 
-For each form only one validator is allowed:
+For each form only one instance is allowed:
 ```js
-var a = validator(myForm);
-var b = validator(myForm);
+var form = document.querySelector('form')
+  , a = validator(form)
+  , b = validator(form);
 
 a === b; // true
 ```
 
-Methods:
-- `validate` - validates the form
+Instance methods:
+- `validate` - validates the form (returns `Boolean)
 - `update` - lets the validator know that fields were added/removed
 
 Options:
@@ -44,18 +45,35 @@ Options:
 
 View demo [here](http://rkrupinski.github.io/validator/demo/).
 
-Defining validators
--------------------
-Validator is simply an object with `2` properties:
+Validators
+----------
+Validator comes with some built-in validators:
+- `equalto` (params: `other` - id of the reference field)
+- `regex` (parans: `pattern` - regular expression to match, `flags` - flags)
+- `required`
+
+Defining custom ones is easy as pie - all you need is simply an object with `2` properties:
 - `priority` - an integer defining order of validators. The one with lower priority applies first.
 - `validate` - the actual validation function. It is called with `2` arguments: `field` and `params`. It must return `Boolean`.
 
-Example validator:
+Defining custom validators:
+
 ```js
-batman: {
-  priority: 10,
-  validate: function (field) {
-    return field.value ? field.value.toLowerCase() === 'batman' : true;
+var validator = require('validator');
+
+validator.define({
+  is: {
+    priority: 10,
+    validate: function (field, params) {
+      var ref = params.value;
+
+      return field.value ? field.value === ref : true;
+    }
   }
 }
+});
 ```
+
+Browser support
+---------------
+IE9+

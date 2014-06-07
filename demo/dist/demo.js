@@ -3,6 +3,15 @@
 
 var validator = require('../../lib/index');
 
+validator.define({
+  even: {
+    priority: 20,
+    validate: function (field) {
+      return field.value ? !(field.value.length % 2) : true;
+    }
+  }
+});
+
 validator(document.querySelector('.js_form'), {
   submitHandler: function (form) {
     if (this.validate()) {
@@ -65,9 +74,9 @@ function compare(a, b) {
   return 0;
 }
 
-function getValidatorParams(node, validator) {
+function getValidatorParams(node, type) {
   var params = {}
-    , re = new RegExp('^data-v-' + validator + '-([a-z-]+)$')
+    , re = new RegExp('^data-v-' + type + '-([a-z-]+)$')
     , match;
 
   slice.call(node.attributes).forEach(function (attr) {
@@ -78,6 +87,10 @@ function getValidatorParams(node, validator) {
   return params;
 }
 
+function isValidatorDefined(type) {
+  return typeof validators[type] !== 'undefined';
+}
+
 function getValidators(node) {
   var found = []
     , match;
@@ -85,8 +98,7 @@ function getValidators(node) {
   slice.call(node.attributes).forEach(function (attr) {
     match = re.exec(attr.name);
 
-    match && typeof validators[match[1]] !== 'undefined' &&
-        found.push({
+    match && isValidatorDefined(match[1]) && found.push({
       type: match[1],
       message: attr.value,
       params: getValidatorParams(node, match[1])
@@ -100,6 +112,10 @@ function getValidators(node) {
 
 
 function Field(node) {
+  if (!(this instanceof Field)) {
+    return new Field(node);
+  }
+
   if (node[key]) {
     return node[key];
   }
@@ -134,9 +150,7 @@ Field.prototype.validate = function () {
   return valid;
 };
 
-module.exports = function (node) {
-  return new Field(node);
-};
+module.exports = Field;
 
 },{"./config":2,"./message":5,"./validators":8}],4:[function(require,module,exports){
 'use strict';
@@ -150,9 +164,12 @@ var config = require('./config')
   , appendMessage = config.appendMessage;
 
 function Message(field) {
+  if (!(this instanceof Message)) {
+    return new Message(field);
+  }
+
   this._field = field;
   this._visible = false;
-
   this._el = document.createElement(config.errorElement);
   this._el.className = config.errorClassName;
 }
@@ -173,9 +190,7 @@ Message.prototype.hide = function () {
   }
 };
 
-module.exports = function (field) {
-  return new Message(field);
-};
+module.exports = Message;
 
 },{"./config":2}],6:[function(require,module,exports){
 'use strict';
@@ -198,10 +213,11 @@ module.exports = extend;
 'use strict';
 
 var field = require('./field')
+  , validators = require('./validators')
   , config = require('./config')
-  , extend = require('./util/extend')
   , key = config.key
   , ignored = config.ignored
+  , extend = require('./util/extend')
   , slice = [].slice;
 
 function elementFilter(element) {
@@ -219,6 +235,10 @@ function submitHandler(e) {
 }
 
 function Validator(form, options) {
+  if (!(this instanceof Validator)) {
+    return new Validator(form, options);
+  }
+
   if (form[key]) {
     return form[key];
   }
@@ -231,6 +251,12 @@ function Validator(form, options) {
 
   this.update();
 }
+
+Validator.define = function (def) {
+  extend(validators, def);
+
+  return this;
+};
 
 Validator.prototype.update = function () {
   this._fields = slice.call(this._form.elements)
@@ -248,15 +274,59 @@ Validator.prototype.validate = function () {
   return !invalid;
 };
 
-module.exports = function (form, options) {
-  return new Validator(form, options);
-};
+module.exports = Validator;
 
-},{"./config":2,"./field":3,"./util/extend":6}],8:[function(require,module,exports){
+},{"./config":2,"./field":3,"./util/extend":6,"./validators":8}],8:[function(require,module,exports){
 'use strict';
 
-var validators = {
+var extend = require('./util/extend');
 
+// built in validators
+var validators = [
+  require('./validators/equalto'),
+  require('./validators/regex'),
+  require('./validators/required')
+];
+
+module.exports = extend.apply(null,
+  [{}].concat(validators));
+
+},{"./util/extend":6,"./validators/equalto":9,"./validators/regex":10,"./validators/required":11}],9:[function(require,module,exports){
+'use strict';
+
+var def = {
+  equalto: {
+    priority: 20,
+    validate: function (field, params) {
+      var other = document.querySelector('#' + params.other);
+
+      return other.value ? field.value === other.value : true;
+    }
+  }
+};
+
+module.exports = def;
+
+},{}],10:[function(require,module,exports){
+'use strict';
+
+var def = {
+  regex: {
+    priority: 20,
+    validate: function (field, params) {
+      var re = new RegExp(params.pattern, params.flags);
+
+      return field.value ? re.test(field.value) : true;
+    }
+  }
+};
+
+module.exports = def;
+
+},{}],11:[function(require,module,exports){
+'use strict';
+
+var def = {
   required: {
     priority: 10,
     validate: function (field) {
@@ -277,28 +347,9 @@ var validators = {
 
       return ret;
     }
-  },
-
-  regex: {
-    priority: 20,
-    validate: function (field, params) {
-      var re = new RegExp(params.pattern, params.flags);
-
-      return field.value ? re.test(field.value) : true;
-    }
-  },
-
-  equalto: {
-    priority: 20,
-    validate: function (field, params) {
-      var other = document.querySelector('#' + params.other);
-
-      return other.value ? field.value === other.value : true;
-    }
   }
-
 };
 
-module.exports = validators;
+module.exports = def;
 
 },{}]},{},[1])
