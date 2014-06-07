@@ -103,7 +103,6 @@ function Field(node) {
   if (node[key]) {
     return node[key];
   }
-
   node[key] = this;
 
   this._node = node;
@@ -181,34 +180,26 @@ module.exports = function (field) {
 },{"./config":2}],6:[function(require,module,exports){
 'use strict';
 
-var utils = {}
-  , slice = [].slice;
+function extend(obj) {
+  var sources = [].slice.call(arguments, 1);
 
-utils.extend = function () {
-  var res = arguments[0]
-    , sources = slice.call(arguments, 1);
-
-  function extendOne(dest, src) {
-    Object.keys(src).forEach(function (prop) {
-      dest[prop] = src[prop];
-    });
-  }
-
-  sources.forEach(function (src) {
-    extendOne(res, src);
+  sources.forEach(function (source) {
+    for (var prop in source) {
+      obj[prop] = source[prop];
+    }
   });
 
-  return res;
-};
+  return obj;
+}
 
-module.exports = utils;
+module.exports = extend;
 
 },{}],7:[function(require,module,exports){
 'use strict';
 
 var field = require('./field')
   , config = require('./config')
-  , utils = require('./utils')
+  , extend = require('./util/extend')
   , key = config.key
   , ignored = config.ignored
   , slice = [].slice;
@@ -236,7 +227,7 @@ function Validator(form, options) {
   this._form = form;
   this._form.noValidate = true;
   this._form.addEventListener('submit', submitHandler.bind(this));
-  this._options = utils.extend({}, options || {});
+  this._options = extend({}, options);
 
   this.update();
 }
@@ -261,7 +252,7 @@ module.exports = function (form, options) {
   return new Validator(form, options);
 };
 
-},{"./config":2,"./field":3,"./utils":6}],8:[function(require,module,exports){
+},{"./config":2,"./field":3,"./util/extend":6}],8:[function(require,module,exports){
 'use strict';
 
 var validators = {
