@@ -70,7 +70,6 @@ validator.define({
       return field.value ? field.value === ref : true;
     }
   }
-}
 });
 ```
 
