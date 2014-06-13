@@ -20,21 +20,8 @@ var validator = require('validator');
 validator(form /*, [options]*/);
 ```
 
-For each form only one instance is allowed:
-```js
-var form = document.querySelector('form')
-  , a = validator(form)
-  , b = validator(form);
-
-a === b; // true
-```
-
-Instance methods:
-- `validate` - validates the form (returns `Boolean)
-- `update` - lets the validator know that fields were added/removed
-
 Options:
-- `submitHandler` - function to call when the form is submitted
+- `submitHandler` - function to call when the form is submitted (called in the context of the validator and passed the form as a parameter)
 ```js
 {
   submitHandler: function (form) {
@@ -43,7 +30,18 @@ Options:
 }
 ```
 
-View demo [here](http://rkrupinski.github.io/validator/demo/).
+Instance methods:
+- `validate` - validates the form (returns `Boolean`, depending on the validation result)
+- `update` - lets the validator know that fields were added/removed
+
+For each form only one instance is allowed:
+```js
+var form = document.querySelector('form')
+  , a = validator(form)
+  , b = validator(form);
+
+a === b; // true
+```
 
 Validators
 ----------
@@ -72,6 +70,10 @@ validator.define({
   }
 });
 ```
+
+Example
+-------
+View demo [here](http://rkrupinski.github.io/validator/demo/).
 
 Browser support
 ---------------
