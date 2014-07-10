@@ -1,6 +1,6 @@
 'use strict';
 
-var validator = require('../../lib/index');
+var validator = require('../..');
 
 validator.define({
   even: {

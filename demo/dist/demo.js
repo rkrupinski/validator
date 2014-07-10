@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var validator = require('../../lib/index');
+var validator = require('../..');
 
 validator.define({
   even: {
@@ -21,7 +21,12 @@ validator(document.querySelector('.js_form'), {
   }
 });
 
-},{"../../lib/index":4}],2:[function(require,module,exports){
+},{"../..":2}],2:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./lib/validator');
+
+},{"./lib/validator":7}],3:[function(require,module,exports){
 'use strict';
 
 var config = {
@@ -52,7 +57,7 @@ var config = {
 
 module.exports = config;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 var message = require('./message')
@@ -152,12 +157,7 @@ Field.prototype.validate = function () {
 
 module.exports = Field;
 
-},{"./config":2,"./message":5,"./validators":8}],4:[function(require,module,exports){
-'use strict';
-
-module.exports = require('./validator');
-
-},{"./validator":7}],5:[function(require,module,exports){
+},{"./config":3,"./message":5,"./validators":8}],5:[function(require,module,exports){
 'use strict';
 
 var config = require('./config')
@@ -192,7 +192,7 @@ Message.prototype.hide = function () {
 
 module.exports = Message;
 
-},{"./config":2}],6:[function(require,module,exports){
+},{"./config":3}],6:[function(require,module,exports){
 'use strict';
 
 function extend(obj) {
@@ -276,7 +276,7 @@ Validator.prototype.validate = function () {
 
 module.exports = Validator;
 
-},{"./config":2,"./field":3,"./util/extend":6,"./validators":8}],8:[function(require,module,exports){
+},{"./config":3,"./field":4,"./util/extend":6,"./validators":8}],8:[function(require,module,exports){
 'use strict';
 
 var extend = require('./util/extend');
