@@ -51,6 +51,11 @@ var config = {
   // default method for inserting error messages
   appendMessage: function append(field, msg) {
     field.parentNode.appendChild(msg);
+  },
+
+  // default method for removing error messages
+  removeMessage: function remove(field, msg) {
+    msg.parentNode && msg.parentNode.removeChild(msg);
   }
 
 };
@@ -126,6 +131,7 @@ function Field(node) {
   }
   node[key] = this;
 
+  this._valid = true;
   this._node = node;
   this._node.addEventListener('change',
       this.validate.bind(this));
@@ -134,10 +140,10 @@ function Field(node) {
 }
 
 Field.prototype.validate = function () {
-  var validator
-    , valid = true
+  var valid = true
     , i = -1
-    , l = this._validators.length;
+    , l = this._validators.length
+    , validator;
 
   while (++i < l) {
     validator = this._validators[i];
@@ -145,9 +151,14 @@ Field.prototype.validate = function () {
         this._node, validator.params);
 
     if (!valid) {
+      this._valid = false;
       this._message.show(validator);
       break;
     } else {
+      if (this._valid) {
+        continue;
+      }
+      this._valid = true;
       this._message.hide();
     }
   }
@@ -160,8 +171,7 @@ module.exports = Field;
 },{"./config":3,"./message":5,"./validators":8}],5:[function(require,module,exports){
 'use strict';
 
-var config = require('./config')
-  , appendMessage = config.appendMessage;
+var config = require('./config');
 
 function Message(field) {
   if (!(this instanceof Message)) {
@@ -169,25 +179,17 @@ function Message(field) {
   }
 
   this._field = field;
-  this._visible = false;
   this._el = document.createElement(config.errorElement);
   this._el.className = config.errorClassName;
 }
 
 Message.prototype.show = function (validator) {
   this._el.innerHTML = validator.message;
-
-  if (!this._visible) {
-    appendMessage.call(null, this._field, this._el);
-    this._visible = true;
-  }
+  config.appendMessage.call(null, this._field, this._el);
 };
 
 Message.prototype.hide = function () {
-  if (this._visible) {
-    this._el.parentNode.removeChild(this._el);
-    this._visible = false;
-  }
+  config.removeMessage.call(null, this._field, this._el);
 };
 
 module.exports = Message;
