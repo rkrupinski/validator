@@ -223,7 +223,8 @@ var field = require('./field')
   , slice = [].slice;
 
 function elementFilter(element) {
-  return ignored.indexOf(element.type) === -1;
+  return ignored.indexOf(element.type) === -1 &&
+      !element.disabled;
 }
 
 function submitHandler(e) {
