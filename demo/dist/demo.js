@@ -14,9 +14,19 @@ validator.define({
 
 validator(document.querySelector('.js_form'), {
   submitHandler: function (form) {
+    var summary;
+
     if (this.validate()) {
       alert('Yay!');
       form.reset();
+    } else {
+      var summary = 'Errors: ' + this.fields.filter(function (field) {
+        return !field.valid;
+      }).map(function (field) {
+        return field.node.name;
+      }).join(', ') + '.';
+
+      console.log('%c' + summary, 'font-size: 1.5em; color: maroon;');
     }
   }
 });
@@ -166,6 +176,21 @@ Field.prototype.validate = function () {
   return valid;
 };
 
+Object.defineProperties(Field.prototype, {
+  valid: {
+    get: function () {
+      return this._valid;
+    },
+    enumerable: true
+  },
+  node: {
+    get: function () {
+      return this._node;
+    },
+    enumerable: true
+  }
+});
+
 module.exports = Field;
 
 },{"./config":3,"./message":5,"./validators":8}],5:[function(require,module,exports){
@@ -248,10 +273,11 @@ function Validator(form, options) {
   form[key] = this;
 
   this._form = form;
-  this._form.noValidate = true;
-  this._form.addEventListener('submit', submitHandler.bind(this));
+  this._fields = [];
   this._options = extend({}, options);
 
+  this._form.noValidate = true;
+  this._form.addEventListener('submit', submitHandler.bind(this));
   this.update();
 }
 
@@ -276,6 +302,13 @@ Validator.prototype.validate = function () {
 
   return !invalid;
 };
+
+Object.defineProperty(Validator.prototype, 'fields', {
+  get: function () {
+    return this._fields;
+  },
+  enumerable: true
+});
 
 module.exports = Validator;
 
