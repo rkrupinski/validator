@@ -29,6 +29,8 @@ Options:
   }
 }
 ```
+Instance properties:
+- `fields` - array of held `Field` objects
 
 Instance methods:
 - `validate` - validates the form (returns `Boolean`, depending on the validation result)
