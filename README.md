@@ -10,7 +10,10 @@ It feeds with `data-` attributes:
 
 The actual html:
 ```html
-<input type="text" data-v-required="I demand value" data-v-regex="Caps only" data-v-regex-pattern="^[A-Z]+$">
+<input type="text" 
+    data-v-required="I demand value"
+    data-v-regex="Caps only" 
+    data-v-regex-pattern="^[A-Z]+$">
 ```
 
 The factory:
