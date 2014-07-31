@@ -83,15 +83,9 @@ var message = require('./message')
   , slice = [].slice;
 
 function compare(a, b) {
-  if (validators[a.type].priority <
-      validators[b.type].priority) {
-    return -1;
-  }
-  if (validators[a.type].priority >
-      validators[b.type].priority) {
-    return 1;
-  }
-  return 0;
+  return validators[a.type].priority > 
+      validators[b.type].priority ?
+      1 : -1;
 }
 
 function getValidatorParams(node, type) {
